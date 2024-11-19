@@ -1,0 +1,19 @@
+{
+  "name": "bookbreeze",
+  "version": "1.0.0",
+  "description": "This is book store API.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.ts"
+  },
+  "keywords": [
+    "expressjs",
+    "typescript"
+  ],
+  "author": "Istiak Ahammad",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.9.1",
+    "ts-node": "^10.9.2"
+  }
+}
