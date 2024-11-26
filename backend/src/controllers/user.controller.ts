@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import UserModel from "../models/user.model";
-import {hash} from "bcrypt";
+import { hash } from "bcrypt";
+import { sign } from "jsonwebtoken";
+import config from "../config/config";
+import { User } from "../types/user.type";
 // create user controller
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -23,14 +26,23 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
     const hashedPassword = await hash(password, 10);
 
     // create user
-    const newUser = await UserModel.create({
+    const newUser: User = await UserModel.create({
       name,
       email,
-      password: hashedPassword
-    })
+      password: hashedPassword,
+    });
+
+    // Create token
+    const token = sign({ sub: newUser._id }, config.jwt_secret as string, {
+      expiresIn: "7d",
+      algorithm: "HS256",
+    });
 
     // send response
-    res.status(201).json({ message: "User created successfully" });
+    res.status(201).json({
+      message: "User created successfully",
+      token,
+    });
   } catch (error) {
     console.log(error);
     const httpError = createHttpError(500, "Something went wrong");
