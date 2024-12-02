@@ -7,12 +7,14 @@
 
 // Imports
 import { Router } from "express";
-import { createUser } from "../controllers/user.controller";
+import { createUser, loginUser } from "../controllers/user.controller";
 
 // Constants
 const userRouter = Router();
 
 // register route
 userRouter.post("/register", createUser);
+userRouter.post("/login", loginUser);
+
 
 export default userRouter;
