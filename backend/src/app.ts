@@ -9,6 +9,7 @@
 import express from "express";
 import globalErrorsHandler from "./middlewares/global.errors.handler";
 import userRouter from "./routes/user.routes";
+import bookRouter from "./routes/book.routes";
 
 // Constants
 const app = express();
@@ -24,6 +25,7 @@ app.get("/", (req, res) => {
 
 // * Routes register
 app.use("/api/users", userRouter);
+app.use("/api/books", bookRouter);
 
 // global error handler
 app.use(globalErrorsHandler);
