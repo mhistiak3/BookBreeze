@@ -8,13 +8,27 @@
 // Imports
 import { Router } from "express";
 import { createBook } from "../controllers/book.controller";
-
+import multer from "multer";
 
 // Constants
 const bookRouter = Router();
 
-// register route
-bookRouter.post("/",createBook);
+// multer
+const upload = multer({
+  dest: "../../public/data/uploads",
+  limits: {
+    fileSize: 3e7, // 30 MB
+  },
+});
 
+// register route
+bookRouter.post(
+  "/",
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "file", maxCount: 1 },
+  ]),
+  createBook
+);
 
 export default bookRouter;
