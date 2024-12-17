@@ -9,11 +9,10 @@
 import { Router } from "express";
 import { createBook } from "../controllers/book.controller";
 import multer from "multer";
-
+import authenticationMiddleware from "../middlewares/authentication.middleware";
 
 // Constants
 const bookRouter = Router();
-
 
 const upload = multer({
   limits: {
@@ -24,6 +23,7 @@ const upload = multer({
 // register route
 bookRouter.post(
   "/",
+  authenticationMiddleware,
   upload.fields([
     { name: "coverImage", maxCount: 1 },
     { name: "file", maxCount: 1 },

@@ -61,7 +61,8 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
     // create book
     const book = await BookModel.create({
       title,
-      author: "6745c24d502de7f3c8e305b5",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      author: (req as any).userId,
       genre,
       coverImage: uploadCoverImage.secure_url,
       file: uploadFile.secure_url,
