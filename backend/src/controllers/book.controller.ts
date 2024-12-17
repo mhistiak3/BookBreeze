@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import cloudinary from "../config/cloudinary";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    //  file validation
+    // File validation
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     if (!files.coverImage || !files.file) {
       throw createHttpError(
@@ -14,24 +14,48 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
       );
     }
 
-     const dataCoverImage = `data:${
-       files.coverImage[0].mimetype
-     };base64,${files.coverImage[0].buffer.toString("base64")}`;
-     const coverImage_public_id = uuidv4()
-    // upload to cloudinary
-    const uploadResult = await cloudinary.uploader.upload(dataCoverImage, {
+    const coverImage = files.coverImage[0];
+    const bookFile = files.file[0];
+    // Upload cover image to Cloudinary 
+    const dataCoverImage = `data:${
+      coverImage.mimetype
+    };base64,${coverImage.buffer.toString("base64")}`;
+    const coverImagePublicId = uuidv4();
+    const uploadCoverImage = await cloudinary.uploader.upload(dataCoverImage, {
       resource_type: "auto",
-      public_id: coverImage_public_id,
+      public_id: coverImagePublicId,
+      folder: "bookbreeze",
     });
-    console.log(uploadResult);
+    console.log("Cover Image Uploaded:", uploadCoverImage);
 
-    
-    // response
-    res.json({ message: "Book created successfully" });
+    // Upload PDF file to Cloudinary using upload_stream
+  const filePublicId = `${uuidv4()}.pdf`;
+    const uploadFile = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "raw",
+          public_id: `file/${filePublicId}`,
+          folder: "bookbreeze",
+        },
+        (error, result) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(result);
+        }
+      );
+      stream.end(bookFile.buffer); 
+    });
+
+    console.log("PDF File Uploaded:", uploadFile);
+
+    // Response
+    res.status(201).json({
+      message: "Book created successfully",
+    });
   } catch (error) {
-    console.log(error);
-    const httpError = createHttpError(500, "Something went wrong");
-    next(httpError);
+    console.error("Error:", error);
+    next(createHttpError(500, "Something went wrong during file upload"));
   }
 };
 

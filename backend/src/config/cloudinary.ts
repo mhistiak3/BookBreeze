@@ -3,9 +3,10 @@ import config from "./config";
 
 
 cloudinary.config({
-    cloud_name: config.cloudinary_cloud_name,
-    api_key: config.cloudinary_api_key,
-    api_secret:config.cloudinary_api_secret,
+  cloud_name: config.cloudinary_cloud_name,
+  api_key: config.cloudinary_api_key,
+  api_secret: config.cloudinary_api_secret,
+  timeout: 60000,
 });
 
 export default cloudinary;

@@ -17,7 +17,7 @@ const bookRouter = Router();
 
 const upload = multer({
   limits: {
-    fileSize: 3e7, // 30 MB
+    fileSize: 10 * 1024 * 1024, // 10 MB
   },
 });
 
