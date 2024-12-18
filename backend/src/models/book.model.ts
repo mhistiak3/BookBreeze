@@ -11,8 +11,8 @@ const bookSchema = new mongoose.Schema<Book>(
       required: true,
     },
     genre: { type: String, required: true },
-    coverImage: { type: String, required: true },
-    file: { type: String, required: true },
+    coverImage: { type: Object, required: true },
+    file: { type: Object, required: true },
   },
   { timestamps: true, versionKey: false }
 );

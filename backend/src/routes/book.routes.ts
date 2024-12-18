@@ -7,7 +7,7 @@
 
 // Imports
 import { Router } from "express";
-import { createBook } from "../controllers/book.controller";
+import { createBook, updateBook } from "../controllers/book.controller";
 import multer from "multer";
 import authenticationMiddleware from "../middlewares/authentication.middleware";
 
@@ -20,7 +20,7 @@ const upload = multer({
   },
 });
 
-// register route
+// create book route
 bookRouter.post(
   "/",
   authenticationMiddleware,
@@ -29,6 +29,17 @@ bookRouter.post(
     { name: "file", maxCount: 1 },
   ]),
   createBook
+);
+
+// update book
+bookRouter.put(
+  "/:bookId",
+  authenticationMiddleware,
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "file", maxCount: 1 },
+  ]),
+  updateBook
 );
 
 export default bookRouter;
