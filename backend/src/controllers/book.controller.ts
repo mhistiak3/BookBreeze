@@ -105,7 +105,7 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     }
     // check right author
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if(book.author.toString() !== (req as any).userId){
+    if (book.author.toString() !== (req as any).userId) {
       throw createHttpError(403, "You are not allowed to update this book");
     }
     // if cover image is updated
@@ -189,22 +189,22 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
 // book list
 const bookList = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const books = await BookModel.find(); 
+    const books = await BookModel.find();
     res.status(200).json(books);
   } catch (error) {
-     console.error("Error:", error);
-     let errorMessage = "Something went wrong during book creation";
-     // Check if error is an instance of Error
-     if (error instanceof Error) {
-       errorMessage = error.message;
-     }
-     next(createHttpError(500, errorMessage));
+    console.error("Error:", error);
+    let errorMessage = "Something went wrong during book creation";
+    // Check if error is an instance of Error
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    next(createHttpError(500, errorMessage));
   }
 };
 
 // single book
 const singleBook = async (req: Request, res: Response, next: NextFunction) => {
-  const {bookId} = req.params;
+  const { bookId } = req.params;
   try {
     const book = await BookModel.findById(bookId);
     if (!book) {
@@ -222,4 +222,32 @@ const singleBook = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createBook, updateBook, bookList, singleBook };
+// delete book
+const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
+  const { bookId } = req.params;
+  try {
+    const book = await BookModel.findById(bookId);
+    if (!book) {
+      throw createHttpError(404, "Book not found");
+    }
+    // check right author
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (book.author.toString() !== (req as any).userId) {
+      throw createHttpError(403, "You are not allowed to delete this book");
+    }
+    await cloudinary.uploader.destroy(book.coverImage.public_id);
+    await cloudinary.uploader.destroy(book.file.public_id);
+    await BookModel.findByIdAndDelete(bookId);
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error:", error);
+    let errorMessage = "Something went wrong during book creation";
+    // Check if error is an instance of Error
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    next(createHttpError(500, errorMessage));
+  }
+};
+
+export { createBook, updateBook, bookList, singleBook, deleteBook };

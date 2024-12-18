@@ -7,7 +7,7 @@
 
 // Imports
 import { Router } from "express";
-import { bookList, createBook, singleBook, updateBook } from "../controllers/book.controller";
+import { bookList, createBook, deleteBook, singleBook, updateBook } from "../controllers/book.controller";
 import multer from "multer";
 import authenticationMiddleware from "../middlewares/authentication.middleware";
 
@@ -41,6 +41,8 @@ bookRouter.put(
   ]),
   updateBook
 );
+// delete book
+bookRouter.delete("/:bookId", authenticationMiddleware, deleteBook);
 
 // get all books
 bookRouter.get("/",bookList)  
