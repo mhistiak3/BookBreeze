@@ -39,7 +39,7 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
         const stream = cloudinary.uploader.upload_stream(
           {
             resource_type: "raw",
-            public_id: `bookbreeze/${filePublicId}`,
+            public_id: `${filePublicId}`,
             folder: "bookbreeze",
           },
           (
@@ -110,7 +110,9 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     }
     // if cover image is updated
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-    if (files.coverImage) {
+    if (files?.coverImage) {
+      // destroy old cover image
+      await cloudinary.uploader.destroy(book.coverImage.public_id);
       const coverImage = files.coverImage[0];
       const dataCoverImage = `data:${
         coverImage.mimetype
@@ -121,7 +123,7 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
         {
           resource_type: "auto",
           public_id: coverImagePublicId,
-          folder: "bookbreeze",
+        
         }
       );
       book.coverImage = {
@@ -131,7 +133,9 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     // if file PDF is updated
-    if (files.file) {
+    if (files?.file) {
+      // destroy old file
+      await cloudinary.uploader.destroy(book.file.public_id);
       const bookFile = files.file[0];
       const filePublicId = book.file.public_id;
       const uploadFile = await new Promise<UploadApiResponse>(
@@ -140,7 +144,7 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
             {
               resource_type: "raw",
               public_id: filePublicId,
-              folder: "bookbreeze",
+             
             },
             (
               error: UploadApiErrorResponse | undefined,

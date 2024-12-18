@@ -7,6 +7,7 @@
 
 // Imports
 import express from "express";
+import cors from "cors";
 import globalErrorsHandler from "./middlewares/global.errors.handler";
 import userRouter from "./routes/user.routes";
 import bookRouter from "./routes/book.routes";
@@ -15,6 +16,7 @@ import bookRouter from "./routes/book.routes";
 const app = express();
 
 // Middlewares
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 
