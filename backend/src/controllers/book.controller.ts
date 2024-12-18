@@ -186,4 +186,20 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createBook, updateBook };
+// book list
+const bookList = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const books = await BookModel.find(); 
+    res.status(200).json(books);
+  } catch (error) {
+     console.error("Error:", error);
+     let errorMessage = "Something went wrong during book creation";
+     // Check if error is an instance of Error
+     if (error instanceof Error) {
+       errorMessage = error.message;
+     }
+     next(createHttpError(500, errorMessage));
+  }
+};
+
+export { createBook, updateBook, bookList };
