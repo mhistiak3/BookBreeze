@@ -202,4 +202,24 @@ const bookList = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createBook, updateBook, bookList };
+// single book
+const singleBook = async (req: Request, res: Response, next: NextFunction) => {
+  const {bookId} = req.params;
+  try {
+    const book = await BookModel.findById(bookId);
+    if (!book) {
+      throw createHttpError(404, "Book not found");
+    }
+    res.status(200).json(book);
+  } catch (error) {
+    console.error("Error:", error);
+    let errorMessage = "Something went wrong during book creation";
+    // Check if error is an instance of Error
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    next(createHttpError(500, errorMessage));
+  }
+};
+
+export { createBook, updateBook, bookList, singleBook };

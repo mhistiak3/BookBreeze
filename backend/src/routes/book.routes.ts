@@ -7,7 +7,7 @@
 
 // Imports
 import { Router } from "express";
-import { bookList, createBook, updateBook } from "../controllers/book.controller";
+import { bookList, createBook, singleBook, updateBook } from "../controllers/book.controller";
 import multer from "multer";
 import authenticationMiddleware from "../middlewares/authentication.middleware";
 
@@ -44,4 +44,5 @@ bookRouter.put(
 
 // get all books
 bookRouter.get("/",bookList)  
+bookRouter.get("/:bookId", singleBook);  
 export default bookRouter;
