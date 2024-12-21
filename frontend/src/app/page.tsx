@@ -1,7 +1,11 @@
+import Banner from "@/components/Banner";
+
 export default function Home() {
   return (
-    <div>
-      <h2 className="text-4xl py-5 text-center">Welcome</h2>
-    </div>
+    <main>
+      <div className="container mx-auto py-14">
+        <Banner />
+      </div>
+    </main>
   );
 }

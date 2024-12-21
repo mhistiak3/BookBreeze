@@ -6,3 +6,11 @@
 .btn{
   @apply border-2 border-primary px-4 py-1 rounded-md transition-all duration-300  
 }
+.banner{
+  @apply bg-cover bg-right h-[300px] w-full rounded-md flex items-center;
+  background-image: url('/banner.jpg');
+  
+}
+.banner h1{
+  @apply text-5xl font-semibold text-primary uppercase p-7 w-8/12 leading-tight;
+}
