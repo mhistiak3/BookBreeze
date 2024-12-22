@@ -6,9 +6,9 @@ import BookModel from "../models/book.model";
 import { UploadApiResponse, UploadApiErrorResponse } from "cloudinary";
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { title, genre } = req.body;
+    const { title, genre, description } = req.body;
     // validation
-    if (!title || !genre) {
+    if (!title || !genre || !description) {
       throw createHttpError(400, "All fields are required");
     }
     // File validation
@@ -64,6 +64,7 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       author: (req as any).userId,
       genre,
+      description,
       coverImage: {
         public_id: uploadCoverImage.public_id,
         url: uploadCoverImage.secure_url,
@@ -95,7 +96,7 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
 
 // update book
 const updateBook = async (req: Request, res: Response, next: NextFunction) => {
-  const { title, genre } = req.body;
+  const { title, genre, description } = req.body;
   const { bookId } = req.params;
 
   try {
@@ -170,6 +171,11 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
     // if title is updated
     if (title) {
       book.title = title;
+    }
+
+    // if description is updated
+    if (description) {
+      book.description = description;
     }
     // if genre is updated
     if (genre) {
