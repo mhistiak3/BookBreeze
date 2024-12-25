@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.container{
+  max-width: 1320px;
+  padding: 0 0.5rem;
+}
 
 .btn{
   @apply border-2 border-primary px-4 py-1 rounded-md transition-all duration-300  
@@ -12,5 +16,5 @@
   
 }
 .banner h1{
-  @apply text-5xl font-semibold text-primary uppercase p-7 w-8/12 leading-tight;
+  @apply text-3xl md:text-4xl xl:text-5xl font-semibold text-primary uppercase md:w-8/12 leading-tight px-10;
 }
